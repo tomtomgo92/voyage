@@ -57,6 +57,7 @@ ${sec("🌐 Contexte géopolitique & sécurité",`<div class="geo-badge">🟨 ${
 <p>${esc(g.texte)}</p><div class="two"><div><h4>⛔ Zones à éviter</h4><ul>${g.eviter.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>👍 Zones sans souci</h4><ul>${g.ok.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>
 <p class="src">Note sur 5 (1 = très calme, 5 = dangereux) pour notre itinéraire, d'après la carte de vigilance. Source : <a href="${g.url}" target="_blank" rel="noopener">${esc(g.source)}</a>.</p>`)}
 ${sec(`🚁 Drone ${d.statut}`,`<p><b>${esc(d.resume)}</b></p><ul style="list-style:none;padding:0">${d.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="src"><b>Règles indicatives, à vérifier avant le départ.</b> Sources : ${d.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`)}
+${sec(`💨 Vapote ${t.vape.statut}`,`<p><b>${esc(t.vape.resume)}</b></p><ul style="list-style:none;padding:0">${t.vape.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p><b>${esc(t.vape.conseil)}</b></p><p class="small">✈️ En avion (toutes compagnies) : vapoteuse et batteries en cabine uniquement, jamais en soute ; interdit de l'utiliser ou de la recharger à bord. ⚠️ Escale à Singapour : vape interdite même en transit (amende jusqu'à 10 000 SGD).</p><p class="src">Règles indicatives, à vérifier avant le départ. Sources : ${t.vape.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")} · <a href="https://www.ecologie.gouv.fr/politiques-publiques/articles-reglementes-interdits-avion-helicoptere" target="_blank" rel="noopener">DGAC, objets réglementés en avion</a> · <a href="https://www.gov.sg/stopvaping-penalties/" target="_blank" rel="noopener">gov.sg, sanctions vape (22/10/2026)</a></p>`)}
 </div></article>`}
 
 function renderCompare(){const rows=[
@@ -73,6 +74,7 @@ function renderCompare(){const rows=[
 ["Visa",id=>({th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel"})[id]],
 ["Décalage",id=>({th:"+6 h",vn:"+6 h",id:"+7 h",ph:"+7 h"})[id]],
 ["Sécurité",id=>"🟨 "+T[id].geo.note+"/5"],
+["Vapote",id=>T[id].vape.statut+" "+esc(T[id].vape.resume)],
 ["Drone < 250 g",id=>T[id].drone.statut+" "+esc(T[id].drone.resume)]];
 $("#compare").innerHTML=`<thead><tr><th></th>${IDS.map(id=>`<th>${T[id].flag} ${esc(T[id].nom)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${IDS.map(id=>`<td>${r[1](id)}</td>`).join("")}</tr>`).join("")}</tbody>`}
 
