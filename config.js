@@ -25,7 +25,7 @@ window.VOYAGE_CONFIG = {
         { zone: "Chiang Mai", nuits: 3, hotel: "ibis Styles Chiang Mai (Accor)", nuit: 55 },
         { zone: "Krabi / Ao Nang", nuits: 4, hotel: "ibis Styles Krabi Ao Nang (Accor)", nuit: 70 }
       ],
-      transportsInterieurs: { prix: 100, detail: "vols Bangkok → Chiang Mai → Krabi" },
+      transportsInterieurs: { prix: 150, detail: "vols Bangkok → Chiang Mai (~45 €) et Chiang Mai → Krabi (~105 €)" },
       budgetJour: 45,
       formalites: { prix: 0, detail: "aucune (exemption de visa)" }
     },
@@ -39,7 +39,7 @@ window.VOYAGE_CONFIG = {
         { zone: "Hoi An", nuits: 4, hotel: "hôtel boutique 3–4★ près de la vieille ville (pas d'Accor en ville)", nuit: 55 },
         { zone: "Hô Chi Minh-Ville", nuits: 3, hotel: "Novotel Saigon Centre (Accor)", nuit: 150 }
       ],
-      transportsInterieurs: { prix: 100, detail: "vols Hanoï → Da Nang → Hô Chi Minh-Ville" },
+      transportsInterieurs: { prix: 100, detail: "vols Hanoï → Da Nang (~50 €) et Da Nang → Hô Chi Minh-Ville (~30 €) + transferts Grab" },
       budgetJour: 35,
       formalites: { prix: 0, detail: "aucune (exemption 45 jours)" }
     },
@@ -67,7 +67,7 @@ window.VOYAGE_CONFIG = {
         { zone: "El Nido", nuits: 5, hotel: "resort 3–4★ à Corong-Corong / Las Cabanas", nuit: 90 },
         { zone: "Coron", nuits: 4, hotel: "The Ridge Coron ou équivalent 3–4★", nuit: 85 }
       ],
-      transportsInterieurs: { prix: 210, detail: "vol Manille/Clark → El Nido (~100 €), ferry El Nido → Coron (~45 €), vol Coron → Manille/Clark (~70 €)" },
+      transportsInterieurs: { prix: 230, detail: "transfert Manille → Clark, vol Clark → El Nido (~85 €), ferry El Nido → Coron (~40 €), vol Coron → Clark (~80 €), tricycles et vans" },
       budgetJour: 55,
       formalites: { prix: 0, detail: "aucune (30 jours sans visa)" }
     }
