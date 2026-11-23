@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mars 2027 : on part où ? 🌏</title>
+<meta name="description" content="Charlotte, Mylène, Thomas : 10 jours en Asie en mars 2027. Thaïlande, Vietnam, Indonésie ou Philippines ? Votez !">
+<meta property="og:title" content="Mars 2027 : on part où ? 🌏">
+<meta property="og:description" content="10 jours, nous trois, l'Asie. Lisez, rêvez, votez !">
+<meta property="og:image" content="img/ph_hero.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <p class="kicker">✈️ 6 → 16 mars 2027 · Charlotte · Mylène · Thomas</p>
+    <h1>Mars 2027 :<br>on part où ?</h1>
+    <p class="lead">10 jours, nous trois, l'Asie. Il ne reste qu'à choisir le pays. Lisez, rêvez, votez&nbsp;!</p>
+    <div class="who">
+      <span>Je suis :</span>
+      <div id="names" class="chips"></div>
+    </div>
+    <a class="btn-ghost" href="#resultats">📊 Voir les résultats</a>
+  </div>
+</header>
+
+<nav class="tabs" id="tabs"></nav>
+
+<main id="countries"></main>
+
+<section id="comparatif" class="section">
+  <h2>🧭 Le comparatif</h2>
+  <div class="table-wrap"><table id="compare"></table></div>
+</section>
+
+<section id="resultats" class="section results">
+  <h2>🗳️ Résultats en direct</h2>
+  <p class="muted" id="totalVotes">Chargement…</p>
+  <div id="bars"></div>
+  <p class="muted small">Un vote par appareil ; vous pouvez changer d'avis à tout moment en touchant un autre pays.</p>
+</section>
+
+<footer class="section foot">
+  <p><strong>Prix relevés le <span id="prixDate"></span>, indicatifs.</strong> Vols aller-retour depuis Paris, 1 adulte, classe éco, 6–16 mars 2027 (dollars convertis à 0,86 €/$). Hôtels : prix moyens de mars relevés en ligne (all.accor.com, Booking, stayversus.com) pour des 3–4★, à reconfirmer pour les dates exactes. Total = vol le moins cher + part d'hôtel (chambre partagée à 3) + transports intérieurs + budget sur place + formalités.</p>
+  <p>Règles drone et sécurité : <strong>règles indicatives, à vérifier avant le départ.</strong> Sécurité d'après France Diplomatie (Conseils aux voyageurs), consulté le 23/11/2026.</p>
+  <details><summary>Crédits photos (Wikimedia Commons)</summary><ul id="credits"></ul></details>
+</footer>
+
+<div id="toast" class="toast"></div>
+<script src="config.js"></script>
+<script src="content.js"></script>
+<script src="credits.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
