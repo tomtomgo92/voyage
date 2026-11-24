@@ -27,9 +27,9 @@ return `<table class="mini"><tr><th>Zone</th><th>Hôtel (3–4★)</th><th class
 ${p.hotels.map(h=>`<tr><td>${esc(h.zone)}<br><span class="muted">${h.nuits} nuit${h.nuits>1?"s":""}</span></td><td>${esc(h.hotel)}</td><td class="r">~${eur(h.nuit)}</td><td class="r">${eur(h.nuit*h.nuits)}</td></tr>`).join("")}
 <tr><td colspan="3"><b>Total 10 nuits</b> (chambre triple ou familiale ; sinon 1 double + 1 simple, compter +30 à 50 %)</td><td class="r"><b>${eur(k.hotelTotal)}</b></td></tr>
 <tr><td colspan="3"><b>Soit par personne</b></td><td class="r"><b>${eur(k.part)}</b></td></tr></table>
-<p class="src">Prix moyens de mars relevés le ${esc(C.prixReleves)} (all.accor.com, Booking, stayversus.com), indicatifs. Transports : ${esc(p.transportsInterieurs.detail)}. Formalités : ${esc(p.formalites.detail)}.</p>`}
+<p class="src">Prix moyens relevés le ${esc(C.prixReleves)} (all.accor.com, Booking, stayversus.com), indicatifs. Transports : ${esc(p.transportsInterieurs.detail)}. Formalités : ${esc(p.formalites.detail)}.</p>`}
 
-function months(m){return `<div class="months">${m.map((c,i)=>`<span class="${c}${i===2?" mar":""}">${MOIS[i]}</span>`).join("")}</div>`}
+function months(m,hi){return `<div class="months">${m.map((c,i)=>`<span class="${c}${(hi||[]).includes(i)?" mar":""}">${MOIS[i]}</span>`).join("")}</div>`}
 
 function sec(title,inner,open){return `<details class="sec"${open?" open":""}><summary>${title}</summary><div class="in">${inner}</div></details>`}
 
@@ -47,7 +47,7 @@ ${sec("🗺️ Itinéraire 10 jours",`<ol class="route">${t.route.map(r=>`<li><b
 ${sec("⭐ Top 5 à ne pas rater",`<ol>${t.top5.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`)}
 ${sec("🍽️ Plats signature & 🌙 vie nocturne",`<p><b>À goûter :</b> ${t.plats.map(esc).join(" · ")}</p><ul>${t.nuit.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}
 ${sec("🤿 Plongée & snorkeling",`<ul>${t.plongee.map(x=>`<li><b>${esc(x[0])}</b> : ${esc(x[1])}</li>`).join("")}</ul>`)}
-${sec("📅 Meilleures périodes",`${t.periodes.map(z=>`<p style="margin:.6em 0 0"><b>${esc(z.zone)}</b></p>${months(z.m)}<p class="small" style="margin:.2em 0 .6em">${esc(z.note)}</p>`).join("")}<p class="legend">🟩 idéal · 🟧 correct · 🟥 à éviter · cadre noir = mars</p><p><b>${esc(t.verdictMars)}</b></p><p class="src">D'après les normales climatiques (saisons sèches et des pluies, saisons des typhons) ; variations d'une année à l'autre.</p>`)}
+${sec("📅 Meilleures périodes",`${t.dates?`<p style="margin:.2em 0 .9em">📆 <b>Fenêtre conseillée : ${esc(t.dates.fenetre)}</b><br>${esc(t.dates.pourquoi)}<br><span class="muted">⛔ À éviter : ${esc(t.dates.eviter)}</span></p>`:""}${t.periodes.map(z=>`<p style="margin:.6em 0 0"><b>${esc(z.zone)}</b></p>${months(z.m,t.datesMois)}<p class="small" style="margin:.2em 0 .6em">${esc(z.note)}</p>`).join("")}<p class="legend">🟩 idéal · 🟧 correct · 🟥 à éviter · cadre noir = fenêtre conseillée</p><p><b>${esc(t.verdictMars)}</b></p><p class="src">D'après les normales climatiques (saisons sèches et des pluies, saisons des typhons) ; variations d'une année à l'autre.</p>`)}
 ${sec("🏨 Hôtels & détail des prix",hotelTable(id))}
 ${sec("🛂 Infos pratiques",`<div class="kv"><b>Formalités</b><span>${esc(p.formalites)}</span><b>Monnaie</b><span>${esc(p.monnaie)}</span><b>Décalage</b><span>${esc(p.decalage)}</span><b>Langue</b><span>${esc(p.langue)}</span><b>Prises</b><span>${esc(p.prises)}</span></div>
 <p style="margin-top:.8em"><b>Coût de la vie</b> (ordres de grandeur 2026)</p><table class="mini">${p.couts.map(c=>`<tr><td>${esc(c[0])}</td><td class="r">${esc(c[1])}</td></tr>`).join("")}</table>
@@ -67,21 +67,21 @@ function renderCompare(){const rows=[
 ["Air France",id=>C.pays[id].vols.airFrance.prix?eur(C.pays[id].vols.airFrance.prix):"en cours"],
 ["Hôtel / pers. (10 n.)",id=>eur(calc(id).part)],
 ["Transports + sur place",id=>eur(C.pays[id].transportsInterieurs.prix)+" + "+eur(calc(id).budget)+"<br><span class='muted'>"+C.pays[id].budgetJour+" €/jour</span>"],
-["Mars",id=>esc(T[id].verdictMars)],
+["En mars",id=>esc(T[id].verdictMars)],
 ["Plages",id=>({jp:"⭐ (pas sur ce circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
 ["Plongée",id=>({jp:"⭐ (Okinawa, hors circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
 ["Culture",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐"})[id]],
 ["Food",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
 ["Fête",id=>({jp:"⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
 ["Visa",id=>({jp:"Sans visa 90 j (JESTA prévue vers 2028)",th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel"})[id]],
-["Décalage",id=>({jp:"+8 h",th:"+6 h",vn:"+6 h",id:"+7 h",ph:"+7 h"})[id]],
+["Décalage",id=>({jp:"+8 h",th:"+6 h",vn:"+6 h",id:"+6 à +7 h",ph:"+7 h"})[id]],
 ["Sécurité",id=>(T[id].geo.note<=1?"🟩 ":"🟨 ")+T[id].geo.note+"/5"],
 ["Se déplacer",id=>T[id].move.statut+" "+esc(T[id].move.resume)],
 ["Vapote",id=>T[id].vape.statut+" "+esc(T[id].vape.resume)],
 ["Drone < 250 g",id=>T[id].drone.statut+" "+esc(T[id].drone.resume)]];
 const CI=T.jp&&C.pays.jp?[...IDS,"jp"]:IDS,cl=id=>id==="jp"?' class="ref"':"";
 $("#compare").innerHTML=`<thead><tr><th></th>${CI.map(id=>`<th${cl(id)}>${T[id].flag} ${esc(T[id].nom)}${id==="jp"?"<br><span class='muted'>pour comparaison</span>":""}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${CI.map(id=>`<td${cl(id)}>${r[1](id)}</td>`).join("")}</tr>`).join("")}</tbody>`;
-if(CI.includes("jp")){const t=T.jp,ts=CI.filter(i=>i!=="jp").map(i=>T[i].flag+" ~"+eur10(calc(i).total)).join(" · ");$("#japon").innerHTML=`<h3>🇯🇵 Et le Japon ? (pour comparaison, hors vote)</h3><p>Circuit classique Tokyo (4 n.) → Kyoto (3 n.) → Osaka (3 n.), mêmes hypothèses que les 4 autres : <b>~${eur10(calc("jp").total)} / pers.</b>, contre ${ts}. Du 6 au 16 mars, on est juste avant le pic des sakura (fin mars – début avril), où les prix d'hôtel peuvent grimper de 50 à 100 %.</p>${priceBlock("jp")}${hotelTable("jp")}<ul style="list-style:none;padding:0"><li>🌸 <b>Mars :</b> ${esc(t.verdictMars)}</li><li>🛡️ <b>Sécurité ${t.geo.note}/5 :</b> ${esc(t.geo.resume)}</li><li>🚄 <b>Se déplacer ${t.move.statut} :</b> ${esc(t.move.resume)}</li><li>💨 <b>Vapote ${t.vape.statut} :</b> ${esc(t.vape.resume)}</li><li>🛸 <b>Drone < 250 g ${t.drone.statut} :</b> ${esc(t.drone.resume)}</li><li>🛂 <b>Entrée :</b> passeport valide pour toute la durée du séjour, 90 jours sans visa ; JESTA (autorisation électronique payante) prévue vers 2028, pas encore en service.</li><li>🕗 <b>Décalage :</b> +8 h en mars.</li></ul><p class="src">Sources : ${t.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`}}
+if(CI.includes("jp")){const t=T.jp,ts=CI.filter(i=>i!=="jp").map(i=>T[i].flag+" ~"+eur10(calc(i).total)).join(" · ");$("#japon").innerHTML=`<h3>🇯🇵 Et le Japon ? (pour comparaison, hors vote)</h3><p>Circuit classique Tokyo (4 n.) → Kyoto (3 n.) → Osaka (3 n.), mêmes hypothèses que les 4 autres : <b>~${eur10(calc("jp").total)} / pers.</b>, contre ${ts}. En mars, on est juste avant le pic des sakura (fin mars – début avril), où les prix d'hôtel peuvent grimper de 50 à 100 %. Meilleures fenêtres : mi-novembre (érables, prix plus doux) ou le pic des sakura si le budget suit.</p>${priceBlock("jp")}${hotelTable("jp")}<ul style="list-style:none;padding:0"><li>🌸 <b>Mars :</b> ${esc(t.verdictMars)}</li><li>🛡️ <b>Sécurité ${t.geo.note}/5 :</b> ${esc(t.geo.resume)}</li><li>🚄 <b>Se déplacer ${t.move.statut} :</b> ${esc(t.move.resume)}</li><li>💨 <b>Vapote ${t.vape.statut} :</b> ${esc(t.vape.resume)}</li><li>🛸 <b>Drone < 250 g ${t.drone.statut} :</b> ${esc(t.drone.resume)}</li><li>🛂 <b>Entrée :</b> passeport valide pour toute la durée du séjour, 90 jours sans visa ; JESTA (autorisation électronique payante) prévue vers 2028, pas encore en service.</li><li>🕗 <b>Décalage :</b> +8 h en mars.</li></ul><p class="src">Sources : ${t.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`}}
 
 function renderNames(){$("#names").innerHTML=C.prenoms.map(n=>`<button class="chip${n===myName?" on":""}" data-n="${esc(n)}">${esc(n)}</button>`).join("");
 document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{myName=b.dataset.n===myName?"":b.dataset.n;localStorage.setItem("vv_name",myName);renderNames();if(myVote)cast(myVote,true)})}

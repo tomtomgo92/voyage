@@ -11,7 +11,7 @@ window.VOYAGE_CONFIG = {
   prixReleves: "23/11/2026",
   voyageurs: 3,
   nuits: 10,
-  dates: "6 → 16 mars 2027",
+  dates: "à choisir — fenêtre conseillée indiquée pour chaque pays",
   prenoms: ["Charlotte", "Mylène", "Thomas"],
 
   pays: {
