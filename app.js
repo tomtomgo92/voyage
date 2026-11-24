@@ -66,19 +66,22 @@ function renderCompare(){const rows=[
 ["Vol le moins cher",id=>eur(calc(id).vol)+"<br><span class='muted'>"+esc(C.pays[id].vols.moinsCher.compagnie)+"</span>"],
 ["Air France",id=>C.pays[id].vols.airFrance.prix?eur(C.pays[id].vols.airFrance.prix):"en cours"],
 ["Hôtel / pers. (10 n.)",id=>eur(calc(id).part)],
+["Transports + sur place",id=>eur(C.pays[id].transportsInterieurs.prix)+" + "+eur(calc(id).budget)+"<br><span class='muted'>"+C.pays[id].budgetJour+" €/jour</span>"],
 ["Mars",id=>esc(T[id].verdictMars)],
-["Plages",id=>({th:"⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
-["Plongée",id=>({th:"⭐⭐⭐⭐",vn:"⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
-["Culture",id=>({th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐"})[id]],
-["Food",id=>({th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
-["Fête",id=>({th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
-["Visa",id=>({th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel"})[id]],
-["Décalage",id=>({th:"+6 h",vn:"+6 h",id:"+7 h",ph:"+7 h"})[id]],
-["Sécurité",id=>"🟨 "+T[id].geo.note+"/5"],
+["Plages",id=>({jp:"⭐ (pas sur ce circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
+["Plongée",id=>({jp:"⭐ (Okinawa, hors circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
+["Culture",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐"})[id]],
+["Food",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
+["Fête",id=>({jp:"⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
+["Visa",id=>({jp:"Sans visa 90 j (JESTA prévue vers 2028)",th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel"})[id]],
+["Décalage",id=>({jp:"+8 h",th:"+6 h",vn:"+6 h",id:"+7 h",ph:"+7 h"})[id]],
+["Sécurité",id=>(T[id].geo.note<=1?"🟩 ":"🟨 ")+T[id].geo.note+"/5"],
 ["Se déplacer",id=>T[id].move.statut+" "+esc(T[id].move.resume)],
 ["Vapote",id=>T[id].vape.statut+" "+esc(T[id].vape.resume)],
 ["Drone < 250 g",id=>T[id].drone.statut+" "+esc(T[id].drone.resume)]];
-$("#compare").innerHTML=`<thead><tr><th></th>${IDS.map(id=>`<th>${T[id].flag} ${esc(T[id].nom)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${IDS.map(id=>`<td>${r[1](id)}</td>`).join("")}</tr>`).join("")}</tbody>`}
+const CI=T.jp&&C.pays.jp?[...IDS,"jp"]:IDS,cl=id=>id==="jp"?' class="ref"':"";
+$("#compare").innerHTML=`<thead><tr><th></th>${CI.map(id=>`<th${cl(id)}>${T[id].flag} ${esc(T[id].nom)}${id==="jp"?"<br><span class='muted'>pour comparaison</span>":""}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${CI.map(id=>`<td${cl(id)}>${r[1](id)}</td>`).join("")}</tr>`).join("")}</tbody>`;
+if(CI.includes("jp")){const t=T.jp,ts=CI.filter(i=>i!=="jp").map(i=>T[i].flag+" ~"+eur10(calc(i).total)).join(" · ");$("#japon").innerHTML=`<h3>🇯🇵 Et le Japon ? (pour comparaison, hors vote)</h3><p>Circuit classique Tokyo (4 n.) → Kyoto (3 n.) → Osaka (3 n.), mêmes hypothèses que les 4 autres : <b>~${eur10(calc("jp").total)} / pers.</b>, contre ${ts}. Du 6 au 16 mars, on est juste avant le pic des sakura (fin mars – début avril), où les prix d'hôtel peuvent grimper de 50 à 100 %.</p>${priceBlock("jp")}${hotelTable("jp")}<ul style="list-style:none;padding:0"><li>🌸 <b>Mars :</b> ${esc(t.verdictMars)}</li><li>🛡️ <b>Sécurité ${t.geo.note}/5 :</b> ${esc(t.geo.resume)}</li><li>🚄 <b>Se déplacer ${t.move.statut} :</b> ${esc(t.move.resume)}</li><li>💨 <b>Vapote ${t.vape.statut} :</b> ${esc(t.vape.resume)}</li><li>🛸 <b>Drone < 250 g ${t.drone.statut} :</b> ${esc(t.drone.resume)}</li><li>🛂 <b>Entrée :</b> passeport valide pour toute la durée du séjour, 90 jours sans visa ; JESTA (autorisation électronique payante) prévue vers 2028, pas encore en service.</li><li>🕗 <b>Décalage :</b> +8 h en mars.</li></ul><p class="src">Sources : ${t.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`}}
 
 function renderNames(){$("#names").innerHTML=C.prenoms.map(n=>`<button class="chip${n===myName?" on":""}" data-n="${esc(n)}">${esc(n)}</button>`).join("");
 document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{myName=b.dataset.n===myName?"":b.dataset.n;localStorage.setItem("vv_name",myName);renderNames();if(myVote)cast(myVote,true)})}

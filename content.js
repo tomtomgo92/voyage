@@ -142,3 +142,85 @@ window.VOYAGE_CONTENT = {
    sources:[["CAAP, types d'opérations","https://www.caap.gov.ph/types-of-operations/"],["CAAP, enregistrement RPA","https://www.caap.gov.ph/rpa-registration-2/"],["CAAP, PCAR Part 11 (2026)","https://www.caap.gov.ph/wp-content/uploads/2026/01/PART-11-Aerial-Work-and-Operating-Limitations-for-Non-Type-Certificated-Aircraft.pdf"]]}
  }
 };
+
+// Japon : référence pour le comparatif (hors vote)
+window.VOYAGE_CONTENT.jp={
+"flag": "🇯🇵",
+"nom": "Japon",
+"color": "#bc002d",
+"verdictMars": "Frais (6–16 °C à Tokyo et Kyoto), sec et lumineux ; pruniers en fleurs, sakura juste après (1res fleurs le 19/03 à Tokyo et le 23/03 à Kyoto en 2026).",
+"geo": {
+"note": 1,
+"titre": "Vigilance normale sur presque tout le pays",
+"resume": "Pays très sûr ; risques naturels (séismes, typhons de juin à novembre), ours dans les zones rurales et de montagne (Hokkaido, Tohoku) ; petites zones encore fermées autour de la centrale de Fukushima Daiichi."
+},
+"move": {
+"statut": "✅",
+"resume": "Le plus simple des 5 : Shinkansen ponctuels et métro, aucun besoin de conduire.",
+"puces": []
+},
+"vape": {
+"statut": "⚠️",
+"resume": "Matériel autorisé, mais e-liquide nicotiné introuvable sur place : import personnel limité à 1 mois (120 ml ou 60 pods), vapoteuse 1 + 1 de réserve ; interdit en intérieur sauf espaces fumeurs.",
+"puces": []
+},
+"drone": {
+"statut": "⚠️",
+"resume": "Dès 100 g : enregistrement MLIT (DIPS 2.0) + Remote ID obligatoires ; autorisation pour les zones urbaines denses (quasi tout Tokyo, Kyoto, Osaka) et les aéroports ; Drone Act (palais, sites sensibles).",
+"puces": []
+},
+"sources": [
+[
+"Air France, Paris → Tokyo, tarifs par mois (24/11/2026)",
+"https://wwws.airfrance.fr/fr-fr/vols-de-paris-a-tokyo"
+],
+[
+"holipak.com / Aviasales, Paris → Tokyo en mars 2027 (23/11/2026)",
+"https://holipak.com/en/flights/paris-tokyo/march-2027/"
+],
+[
+"stayversus.com, ibis Styles Tokyo Ginza et Kyoto Station, prix par mois",
+"https://stayversus.com/en/hotel/ibis-styles-tokyo-ginza-tokyo/prices/"
+],
+[
+"JR Group, tarifs Nozomi (10/2026)",
+"https://jr-group.jp/nozomi-ryokin/"
+],
+[
+"japanplain.com, JR Pass 2026 (vérifié le 31/10/2026)",
+"https://japanplain.com/japan-rail-pass-worth-it-2026/"
+],
+[
+"Japan Echo, budget quotidien 2026",
+"https://japanecho.com/guides/daily-budget/"
+],
+[
+"Agence météo du Japon (JMA), floraison 2026",
+"https://www.data.jma.go.jp/sakura/data/sakura_kaika.html"
+],
+[
+"France Diplomatie, Japon",
+"https://www.diplomatie.gouv.fr/fr/conseils-aux-voyageurs/conseils-par-pays-destination/japon/"
+],
+[
+"VisasNews, JESTA attendue pour 2028",
+"https://visasnews.com/japon-le-parlement-devoile-de-nouveaux-details-sur-la-future-autorisation-de-voyage-electronique-jesta-attendue-pour-2028/"
+],
+[
+"MHLW, cigarettes électroniques, import personnel (Q63)",
+"https://www.mhlw.go.jp/web/t_doc?dataId=00tc1462&dataType=1&pageNo=2"
+],
+[
+"MLIT, règles drones / DIPS 2.0",
+"https://www.mlit.go.jp/en/koku/uas.html"
+],
+[
+"Police nationale (NPA), Drone Act modifié le 14/07/2026",
+"https://www.npa.go.jp/english/uas/uas.html"
+],
+[
+"BCE, 1 € = 174 ¥ (23/11/2026)",
+"https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/eurofxref-graph-jpy.en.html"
+]
+]
+};

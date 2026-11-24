@@ -70,6 +70,21 @@ window.VOYAGE_CONFIG = {
       transportsInterieurs: { prix: 230, detail: "transfert Manille → Clark, vol Clark → El Nido (~85 €), ferry El Nido → Coron (~40 €), vol Coron → Clark (~80 €), tricycles et vans" },
       budgetJour: 55,
       formalites: { prix: 0, detail: "aucune (30 jours sans visa)" }
+    },
+    // Japon : colonne de référence « pour comparaison » (hors vote)
+    jp: {
+      vols: {
+        airFrance: { prix: 1219, detail: "direct CDG → Haneda/Narita, tarif « dès » affiché pour mars 2027 sur airfrance.fr (relevé le 24/11/2026 ; mars = l'un des mois les plus chers)" },
+        moinsCher: { compagnie: "Air China", prix: 800, detail: "1 escale (Pékin), ~798 € repéré pour début mars 2027 (Aviasales via holipak.com, 23/11/2026) ; China Eastern ~810 €, Korean Air ~876 €" }
+      },
+      hotels: [
+        { zone: "Tokyo (Ginza)", nuits: 4, hotel: "ibis Styles Tokyo Ginza (Accor) : 1 double ~120 € + 1 simple ~80 € (chambres japonaises petites, triples rares)", nuit: 200 },
+        { zone: "Kyoto (gare)", nuits: 3, hotel: "Mercure Kyoto Station (Accor), chambre Superior Triple", nuit: 170 },
+        { zone: "Osaka (Namba)", nuits: 3, hotel: "The OneFive Osaka Namba Dotonbori (ex-ibis Styles) ou équivalent 3★, 2 chambres", nuit: 130 }
+      ],
+      transportsInterieurs: { prix: 235, detail: "Shinkansen Nozomi Tokyo → Kyoto 14 170 ¥ + Shin-Osaka → Tokyo 14 720 ¥, Kyoto ↔ Osaka ~600 ¥, aéroport ↔ centre ~3 000 ¥, métro/bus (carte IC) ~8 000 ¥ : ~40 500 ¥ ≈ 235 € (billets à l'unité ; le JR Pass 7 jours à 50 000 ¥, Nozomi non inclus, ne vaut pas le coup ici)" },
+      budgetJour: 75,
+      formalites: { prix: 0, detail: "aucune (90 jours sans visa ; JESTA prévue vers 2028)" }
     }
   }
 };
