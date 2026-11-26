@@ -8,46 +8,47 @@
 <meta property="og:title" content="2027 : on part où ? 🌏">
 <meta property="og:description" content="10 jours, nous trois, l'Asie. Lisez, rêvez, votez !">
 <meta property="og:image" content="img/ph_hero.jpg">
+<meta name="theme-color" content="#0f1c2e">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌏</text></svg>">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-inner">
-    <p class="kicker">✈️ 2027 · dates à choisir ensemble · Charlotte · Mylène · Thomas</p>
-    <h1>2027 :<br>on part où ?</h1>
-    <p class="lead">10 jours, nous trois, l'Asie. Les dates ne sont pas fixées : chaque pays a sa fenêtre idéale prix × météo, indiquée dans sa fiche. Il ne reste qu'à choisir le pays. Lisez, rêvez, votez&nbsp;!</p>
-    <div class="who">
-      <span>Je suis :</span>
-      <div id="names" class="chips"></div>
-    </div>
-    <a class="btn-ghost" href="#resultats">📊 Voir les résultats</a>
+<header class="top">
+  <div class="top-bg"></div>
+  <div class="top-in">
+    <p class="kicker">✈️ 2027 · 10 jours · Charlotte · Mylène · Thomas</p>
+    <h1>2027 : on part où&nbsp;?</h1>
+    <p class="lead">Quatre pays, une fenêtre idéale chacun. Feuilletez, rêvez, votez&nbsp;!</p>
+    <div class="who"><span>Je suis</span><div id="names" class="chips"></div></div>
+    <div class="score" id="score" aria-label="Votes en direct"></div>
   </div>
 </header>
 
-<nav class="tabs" id="tabs"></nav>
+<nav class="tabs" id="tabs" aria-label="Pays"></nav>
 
 <main id="countries"></main>
 
-<section id="comparatif" class="section">
+<section id="comparatif" class="view section" data-view="comparatif">
   <h2>🧭 Le comparatif</h2>
+  <p class="small muted">Faites glisser le tableau vers la gauche ➜ · le 🇯🇵 Japon est là pour comparaison, hors vote.</p>
   <div class="table-wrap"><table id="compare"></table></div>
-  <div id="japon" class="japon"></div>
+  <details class="sec japon-d"><summary>🇯🇵 Et le Japon ? Le détail (pour comparaison, hors vote)</summary><div class="in"><div id="japon" class="japon"></div></div></details>
 </section>
 
-<section id="resultats" class="section results">
+<section id="resultats" class="view section results" data-view="resultats">
   <h2>🗳️ Résultats en direct</h2>
   <p class="muted" id="totalVotes">Chargement…</p>
   <div id="bars"></div>
   <p class="muted small">Un vote par appareil ; vous pouvez changer d'avis à tout moment en touchant un autre pays.</p>
 </section>
 
-<footer class="section foot">
-  <p><strong>Prix relevés le <span id="prixDate"></span>, indicatifs.</strong> Vols aller-retour depuis Paris, 1 adulte, classe éco, sur les fenêtres conseillées de chaque pays (dollars convertis à 0,86 €/$). Hôtels : prix moyens relevés en ligne (all.accor.com, Booking, stayversus.com) pour des 3–4★, à reconfirmer pour les dates exactes. Total = vol le moins cher + part d'hôtel (chambre partagée à 3) + transports intérieurs + budget sur place + formalités.</p>
+<footer class="foot">
+  <details><summary>ℹ️ Sources, méthode & crédits photos</summary>
+  <p><strong>Prix relevés le <span id="prixDate"></span>, indicatifs.</strong> Vols aller-retour depuis Paris, 1 adulte, classe éco, sur les fenêtres conseillées de chaque pays (dollars convertis à 0,86 €/$). Hôtels : prix moyens relevés en ligne (all.accor.com, Booking, stayversus.com) pour des 3–4★, à reconfirmer pour les dates exactes. Total = vol le moins cher + part d'hôtel (chambre partagée à 3) + transports intérieurs + budget sur place + formalités. Les « Hôtels de rêve Accor » ne comptent pas dans les totaux.</p>
   <p>Règles drone et sécurité : <strong>règles indicatives, à vérifier avant le départ.</strong> Sécurité d'après France Diplomatie (Conseils aux voyageurs), consulté le 23/11/2026.</p>
-  <details><summary>Crédits photos (Wikimedia Commons)</summary><ul id="credits"></ul></details>
+  <p><b>Photos (Wikimedia Commons, licences libres)</b></p><ul id="credits"></ul></details>
 </footer>
 
 <div id="toast" class="toast"></div>

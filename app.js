@@ -31,36 +31,62 @@ ${p.hotels.map(h=>`<tr><td>${esc(h.zone)}<br><span class="muted">${h.nuits} nuit
 
 function months(m,hi){return `<div class="months">${m.map((c,i)=>`<span class="${c}${(hi||[]).includes(i)?" mar":""}">${MOIS[i]}</span>`).join("")}</div>`}
 
-function sec(title,inner,open){return `<details class="sec"${open?" open":""}><summary>${title}</summary><div class="in">${inner}</div></details>`}
+function sec(title,inner,open,key){return `<details class="sec"${key?` data-k="${key}"`:""}${open?" open":""}><summary>${title}</summary><div class="in">${inner}</div></details>`}
 
-function renderCountry(id){const t=T[id],p=t.pratique,g=t.geo,d=t.drone;
-return `<article class="country" id="c-${id}">
-<div class="c-hero" style="background-image:url(${t.hero})"><span class="badge">${t.num}️⃣ ${t.flag}</span><div class="title"><h2>${esc(t.nom)}</h2><p>${esc(t.slogan)}</p></div></div>
+const CRED={};(window.VOYAGE_CREDITS||[]).forEach(c=>CRED[c.k]=c);
+const GAL=id=>(window.VOYAGE_CREDITS||[]).filter(c=>c.k.slice(0,2)===id);
+const ST=s=>s==="✅"?"ok":s==="❌"?"no":"warn";
+const lnk=s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`;
+function gallery(id){const g=GAL(id),t=T[id];
+return `<div class="gal" data-gal="${id}"><div class="track" tabindex="0" aria-label="Photos ${esc(t.nom)}">${g.map((c,i)=>`<figure><img ${i?'loading="lazy" ':'fetchpriority="high" '}src="img/${c.k}.webp" alt="${esc(c.cap)}" width="1200" height="800"><figcaption>${esc(c.cap)}<a href="${c.url}" target="_blank" rel="noopener" class="cr">© ${esc((c.artist||"").slice(0,40))} · ${esc(c.lic)}</a></figcaption></figure>`).join("")}</div>
+<div class="g-over"><span class="g-flag">${t.flag}</span><h2>${esc(t.nom)}</h2><p>${esc(t.slogan)}</p></div>
+<div class="dots-g">${g.map((_,i)=>`<i class="${i?"":"on"}"></i>`).join("")}</div>
+<button class="g-nav prev" aria-label="Photo précédente">‹</button><button class="g-nav next" aria-label="Photo suivante">›</button></div>`}
+function dreamHotels(id){const H=T[id].hotels;if(!H||!H.etapes||!H.etapes.length)return"";
+const card=(x,main)=>`<div class="dh${main?" main":""}"><div class="dh-top"><span class="brand">${esc(x.marque||"Accor")}</span>${x.note?`<span class="rate">★ ${x.note}</span>`:""}</div><b>${x.url?`<a href="${x.url}" target="_blank" rel="noopener">${esc(x.nom)} ↗</a>`:esc(x.nom)}</b>${x.total?`<div class="dh-p"><strong>${eur(x.total)}</strong> <span class="muted">pour 3${x.nuit?` · ${eur(x.nuit)}/nuit`:""}${x.taxes?` · + ${eur(x.taxes)} de taxes`:""}</span></div>`:""}<div class="dh-tags">${x.pdj?'<span>🥐 petit-déj inclus</span>':""}${x.info?`<span>${esc(x.info)}</span>`:""}</div></div>`;
+return sec("✨ Hôtels de rêve Accor <span class='pill'>pour rêver</span>",`<p class="small muted">Pour rêver, hors budget (les totaux restent calculés sur les hôtels 3–4★). Tarifs membres ALL vus le 26/11/2026 sur all.accor.com, 3 adultes, séjour complet, hors taxes sauf mention, dates : ${esc(H.dates)}.</p>${H.etapes.map(e=>`<div class="dh-stop"><h4>📍 ${esc(e.zone)} <span class="muted">· ${esc(e.dates)}</span></h4>${card(e.choix,1)}${(e.alt||[]).length?`<div class="dh-alt">${e.alt.map(x=>card(x)).join("")}</div>`:""}</div>`).join("")}`,false,"dream")}
+function etudeAF(id){const e=T[id].etudeAF;if(!e)return"";const mn=Math.min(...e.lignes.map(l=>l[2])),mx=Math.max(...e.lignes.map(l=>l[2]));
+return sec("✈️ "+esc(e.titre),`<p class="small muted">${esc(e.intro)}</p><div class="af-bars">${e.lignes.map(l=>`<div class="afb${l[2]===mn?" best":""}"><span class="d">${esc(l[0])}${l[1]?`<em>${esc(l[1])}</em>`:""}</span><span class="t"><i style="width:${Math.round(35+65*(l[2]-mn)/(mx-mn||1))}%"></i></span><b>~${eur(l[2])}</b></div>`).join("")}</div><ul class="concl">${e.conclusion.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="small"><b>${esc(e.note)}</b></p><p class="src">Montants en dollars d'origine : ${e.lignes.map(l=>esc(l[0])+" "+esc(l[3])).join(" · ")}.</p>`)}
+function renderCountry(id){const t=T[id],p=t.pratique,g=t.geo,d=t.drone,k=calc(id),ix=IDS.indexOf(id);
+const prev=IDS[(ix+3)%4],next=IDS[(ix+1)%4];
+return `<article class="view country" id="v-${id}" data-view="${id}" style="--c:${t.color}">
+${gallery(id)}
 <div class="c-body">
-<ul class="pitch">${t.pitch.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
+<div class="facts">
+<button class="fact big" data-open="prix"><span>💶 Total estimé / pers.</span><strong>~${eur10(k.total)}</strong><em>10 jours, vols compris</em></button>
+<button class="fact" data-open="dates"><span>📆 Meilleures dates</span><strong>${esc(t.dates?t.dates.fenetre:"")}</strong></button>
+<button class="fact" data-open="geo"><span>🛡️ Sécurité</span><strong>${g.note<=1?"🟩":"🟨"} ${g.note}/5</strong><em>${esc(g.titre)}</em></button>
+</div>
+<div class="chips-s">
+<button class="st ${ST(d.statut)}" data-open="drone">🚁 Drone ${d.statut}</button>
+<button class="st ${ST(t.vape.statut)}" data-open="vape">💨 Vapote ${t.vape.statut}</button>
+<button class="st ${ST(t.move.statut)}" data-open="move">🚗 Se déplacer ${t.move.statut}</button>
+</div>
+<ul class="pitch">${t.pitch.slice(0,3).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>
 <p class="tagline">✨ ${esc(t.tagline)}</p>
-<div class="strip">${t.photos.map(s=>`<img loading="lazy" src="${s}" alt="${esc(t.nom)}">`).join("")}</div>
-<button class="vote" data-id="${id}" style="background:${t.color}"><span>${t.flag} Je vote ${esc(t.nom)}</span><span class="n" id="n-${id}">0</span></button>
-<div class="voters" id="v-${id}"></div>
-${priceBlock(id)}
-${sec("🗺️ Itinéraire 10 jours",`<ol class="route">${t.route.map(r=>`<li><b>${esc(r[0])}</b> · ${esc(r[1])}<br><span class="muted">${esc(r[2])}</span></li>`).join("")}</ol>`)}
-${sec("⭐ Top 5 à ne pas rater",`<ol>${t.top5.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>`)}
-${sec("🍽️ Plats signature & 🌙 vie nocturne",`<p><b>À goûter :</b> ${t.plats.map(esc).join(" · ")}</p><ul>${t.nuit.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}
+<button class="vote" data-id="${id}"><span>${t.flag} Je vote ${esc(t.nom)}</span><span class="n" id="n-${id}">0</span></button>
+<div class="voters" id="vt-${id}"></div>
+<div class="acc">
+${sec("💶 Prix détaillés & hôtels 3–4★",priceBlock(id)+hotelTable(id),false,"prix")}
+${dreamHotels(id)}
+${etudeAF(id)}
+${sec("🗺️ Itinéraire 10 jours & top 5",`<ol class="route">${t.route.map(r=>`<li><b>${esc(r[0])}</b> · ${esc(r[1])}<br><span class="muted">${esc(r[2])}</span></li>`).join("")}</ol><h4>⭐ À ne pas rater</h4><ol>${t.top5.map(x=>`<li>${esc(x)}</li>`).join("")}</ol>${t.pitch.length>3?`<ul class="pitch">${t.pitch.slice(3).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:""}`)}
+${sec("🍽️ À goûter & 🌙 sortir",`<p><b>À goûter :</b> ${t.plats.map(esc).join(" · ")}</p><ul>${t.nuit.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}
 ${sec("🤿 Plongée & snorkeling",`<ul>${t.plongee.map(x=>`<li><b>${esc(x[0])}</b> : ${esc(x[1])}</li>`).join("")}</ul>`)}
-${sec("📅 Meilleures périodes",`${t.dates?`<p style="margin:.2em 0 .9em">📆 <b>Fenêtre conseillée : ${esc(t.dates.fenetre)}</b><br>${esc(t.dates.pourquoi)}<br><span class="muted">⛔ À éviter : ${esc(t.dates.eviter)}</span></p>`:""}${t.periodes.map(z=>`<p style="margin:.6em 0 0"><b>${esc(z.zone)}</b></p>${months(z.m,t.datesMois)}<p class="small" style="margin:.2em 0 .6em">${esc(z.note)}</p>`).join("")}<p class="legend">🟩 idéal · 🟧 correct · 🟥 à éviter · cadre noir = fenêtre conseillée</p><p><b>${esc(t.verdictMars)}</b></p><p class="src">D'après les normales climatiques (saisons sèches et des pluies, saisons des typhons) ; variations d'une année à l'autre.</p>`)}
-${sec("🏨 Hôtels & détail des prix",hotelTable(id))}
-${sec("🛂 Infos pratiques",`<div class="kv"><b>Formalités</b><span>${esc(p.formalites)}</span><b>Monnaie</b><span>${esc(p.monnaie)}</span><b>Décalage</b><span>${esc(p.decalage)}</span><b>Langue</b><span>${esc(p.langue)}</span><b>Prises</b><span>${esc(p.prises)}</span></div>
+${sec("📅 Meilleures périodes",`${t.dates?`<p class="win">📆 <b>Fenêtre conseillée : ${esc(t.dates.fenetre)}</b><br>${esc(t.dates.pourquoi)}<br><span class="muted">⛔ À éviter : ${esc(t.dates.eviter)}</span></p>`:""}${t.periodes.map(z=>`<p style="margin:.6em 0 0"><b>${esc(z.zone)}</b></p>${months(z.m,t.datesMois)}<p class="small" style="margin:.2em 0 .6em">${esc(z.note)}</p>`).join("")}<p class="legend">🟩 idéal · 🟧 correct · 🟥 à éviter · cadre noir = fenêtre conseillée</p><p><b>${esc(t.verdictMars)}</b></p><p class="src">D'après les normales climatiques (saisons sèches et des pluies, saisons des typhons) ; variations d'une année à l'autre.</p>`,false,"dates")}
+${sec("🛂 Entrée, santé, argent",`<div class="kv"><b>Formalités</b><span>${esc(p.formalites)}</span><b>Monnaie</b><span>${esc(p.monnaie)}</span><b>Décalage</b><span>${esc(p.decalage)}</span><b>Langue</b><span>${esc(p.langue)}</span><b>Prises</b><span>${esc(p.prises)}</span></div>
 <p style="margin-top:.8em"><b>Coût de la vie</b> (ordres de grandeur 2026)</p><table class="mini">${p.couts.map(c=>`<tr><td>${esc(c[0])}</td><td class="r">${esc(c[1])}</td></tr>`).join("")}</table>
 <p><b>Santé :</b> ${esc(p.sante)}</p><p><b>Sécurité au quotidien :</b> ${esc(p.securite)}</p>
 <p class="src">Formalités : France Diplomatie (Entrée / séjour) et sites officiels, consultés le 23/11/2026. Taux de change indicatifs du 23/11/2026. Santé : voir un centre de vaccinations internationales avant le départ.</p>`)}
-${sec("🌐 Contexte géopolitique & sécurité",`<div class="geo-badge">🟨 ${esc(g.titre)} · <span class="dots">${"●".repeat(g.note)}${"○".repeat(5-g.note)}</span> ${g.note}/5</div>
+${sec("🌐 Géopolitique & sécurité",`<div class="geo-badge">${g.note<=1?"🟩":"🟨"} ${esc(g.titre)} · <span class="dots">${"●".repeat(g.note)}${"○".repeat(5-g.note)}</span> ${g.note}/5</div>
 <p>${esc(g.texte)}</p><div class="two"><div><h4>⛔ Zones à éviter</h4><ul>${g.eviter.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>👍 Zones sans souci</h4><ul>${g.ok.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>
-<p class="src">Note sur 5 (1 = très calme, 5 = dangereux) pour notre itinéraire, d'après la carte de vigilance. Source : <a href="${g.url}" target="_blank" rel="noopener">${esc(g.source)}</a>.</p>`)}
-${sec(`🚁 Drone ${d.statut}`,`<p><b>${esc(d.resume)}</b></p><ul style="list-style:none;padding:0">${d.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="src"><b>Règles indicatives, à vérifier avant le départ.</b> Sources : ${d.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`)}
-${sec(`🚗 Se déplacer ${t.move.statut}`,`<p><b>${esc(t.move.resume)}</b></p><ul style="list-style:none;padding:0">${t.move.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p><b>${esc(t.move.conseil)}</b></p><p class="src">Fourchettes de prix typiques relevées en novembre 2026 (1 € ≈ 37 THB ≈ 28 300 VND ≈ 20 000 IDR ≈ 70 PHP ; 1 $ ≈ 0,91 €), indicatives. Permis international : à demander sur le site de l'ANTS avant le départ, toujours avec le permis français. Sources : ${t.move.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")} · <a href="https://unece.org/sites/default/files/2022-08/ECE-TRANS-WP.1-2022-1-Rev.1f.pdf" target="_blank" rel="noopener">CEE-ONU, permis internationaux par pays</a></p>`)}
-${sec(`💨 Vapote ${t.vape.statut}`,`<p><b>${esc(t.vape.resume)}</b></p><ul style="list-style:none;padding:0">${t.vape.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p><b>${esc(t.vape.conseil)}</b></p><p class="small">✈️ En avion (toutes compagnies) : vapoteuse et batteries en cabine uniquement, jamais en soute ; interdit de l'utiliser ou de la recharger à bord. ⚠️ Escale à Singapour : vape interdite même en transit (amende jusqu'à 10 000 SGD).</p><p class="src">Règles indicatives, à vérifier avant le départ. Sources : ${t.vape.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")} · <a href="https://www.ecologie.gouv.fr/politiques-publiques/articles-reglementes-interdits-avion-helicoptere" target="_blank" rel="noopener">DGAC, objets réglementés en avion</a> · <a href="https://www.gov.sg/stopvaping-penalties/" target="_blank" rel="noopener">gov.sg, sanctions vape (22/10/2026)</a></p>`)}
+<p class="src">Note sur 5 (1 = très calme, 5 = dangereux) pour notre itinéraire, d'après la carte de vigilance. Source : <a href="${g.url}" target="_blank" rel="noopener">${esc(g.source)}</a>.</p>`,false,"geo")}
+${sec(`🚁 Drone ${d.statut}`,`<p><b>${esc(d.resume)}</b></p><ul class="nb">${d.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p class="src"><b>Règles indicatives, à vérifier avant le départ.</b> Sources : ${d.sources.map(lnk).join(" · ")}</p>`,false,"drone")}
+${sec(`🚗 Se déplacer ${t.move.statut}`,`<p><b>${esc(t.move.resume)}</b></p><ul class="nb">${t.move.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p><b>${esc(t.move.conseil)}</b></p><p class="src">Fourchettes de prix typiques relevées en novembre 2026 (1 € ≈ 37 THB ≈ 28 300 VND ≈ 20 000 IDR ≈ 70 PHP ; 1 $ ≈ 0,91 €), indicatives. Permis international : à demander sur le site de l'ANTS avant le départ, toujours avec le permis français. Sources : ${t.move.sources.map(lnk).join(" · ")} · <a href="https://unece.org/sites/default/files/2022-08/ECE-TRANS-WP.1-2022-1-Rev.1f.pdf" target="_blank" rel="noopener">CEE-ONU, permis internationaux par pays</a></p>`,false,"move")}
+${sec(`💨 Vapote ${t.vape.statut}`,`<p><b>${esc(t.vape.resume)}</b></p><ul class="nb">${t.vape.puces.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p><b>${esc(t.vape.conseil)}</b></p><p class="small">✈️ En avion (toutes compagnies) : vapoteuse et batteries en cabine uniquement, jamais en soute ; interdit de l'utiliser ou de la recharger à bord. ⚠️ Escale à Singapour : vape interdite même en transit (amende jusqu'à 10 000 SGD).</p><p class="src">Règles indicatives, à vérifier avant le départ. Sources : ${t.vape.sources.map(lnk).join(" · ")} · <a href="https://www.ecologie.gouv.fr/politiques-publiques/articles-reglementes-interdits-avion-helicoptere" target="_blank" rel="noopener">DGAC, objets réglementés en avion</a> · <a href="https://www.gov.sg/stopvaping-penalties/" target="_blank" rel="noopener">gov.sg, sanctions vape (22/10/2026)</a></p>`,false,"vape")}
+</div>
+<nav class="pn"><a href="#${prev}">‹ ${T[prev].flag} ${esc(T[prev].nom)}</a><a href="#comparatif">🧭</a><a href="#${next}">${T[next].flag} ${esc(T[next].nom)} ›</a></nav>
 </div></article>`}
-
 function renderCompare(){const rows=[
 ["Total / pers.",id=>"<b>~"+eur10(calc(id).total)+"</b>"],
 ["Vol le moins cher",id=>eur(calc(id).vol)+"<br><span class='muted'>"+esc(C.pays[id].vols.moinsCher.compagnie)+"</span>"],
@@ -93,20 +119,42 @@ async function rpc(fn,body){const r=await fetch(`${C.supabaseUrl}/rest/v1/rpc/${
 async function load(){try{const rows=await rpc("vote_results");results={};(rows||[]).forEach(r=>results[r.country]=r);paint()}catch(e){$("#totalVotes").textContent="Résultats momentanément indisponibles."}}
 
 function paint(){const total=IDS.reduce((s,id)=>s+(results[id]?.votes||0),0);const max=Math.max(0,...IDS.map(id=>results[id]?.votes||0));
-IDS.forEach(id=>{const n=results[id]?.votes||0;$("#n-"+id).textContent=n;const names=results[id]?.names||[];$("#v-"+id).textContent=n?("🙋 "+(names.length?names.join(", "):"")+(n>names.length?(names.length?" + ":"")+(n-names.length)+" anonyme"+(n-names.length>1?"s":""):"")):"";
+IDS.forEach(id=>{const n=results[id]?.votes||0;$("#n-"+id).textContent=n;const names=results[id]?.names||[];$("#vt-"+id).textContent=n?("🙋 "+(names.length?names.join(", "):"")+(n>names.length?(names.length?" + ":"")+(n-names.length)+" anonyme"+(n-names.length>1?"s":""):"")):"";
 document.querySelector(`.vote[data-id=${id}]`).classList.toggle("voted",myVote===id);
-const a=document.querySelector(`.tabs a[href="#c-${id}"] .cnt`);if(a)a.textContent=n});
+document.querySelectorAll(`[data-cnt="${id}"]`).forEach(e=>e.textContent=n)});
 $("#totalVotes").textContent=total?`${total} vote${total>1?"s":""} au total${max&&IDS.filter(id=>(results[id]?.votes||0)===max).length===1?"":" · égalité en tête !"}`:"Pas encore de vote : à vous de jouer !";
 const sorted=[...IDS].sort((a,b)=>(results[b]?.votes||0)-(results[a]?.votes||0));
 $("#bars").innerHTML=sorted.map(id=>{const n=results[id]?.votes||0,pct=total?Math.round(n*100/total):0,lead=max>0&&n===max;return `<div class="bar${lead?" lead":""}"><div class="lab"><span>${T[id].flag} ${esc(T[id].nom)}</span><span>${n} · ${pct} %</span></div><div class="track"><div class="fill" style="width:${pct}%;background:${T[id].color}"></div></div>${(results[id]?.names||[]).length?`<p class="who">${results[id].names.map(esc).join(", ")}</p>`:""}</div>`}).join("")}
 
 async function cast(id,silent){try{await rpc("cast_vote",{p_voter_id:voterId,p_country:id,p_name:myName||null});myVote=id;localStorage.setItem("vv_vote",id);if(!silent)toast(`Vote enregistré : ${T[id].flag} ${T[id].nom} ${myName?"(merci "+myName+" !)":""}`);await load()}catch(e){toast("Oups, le vote n'est pas passé. Réessayez.")}}
 
-$("#tabs").innerHTML=IDS.map(id=>`<a href="#c-${id}">${T[id].flag} ${esc(T[id].nom)}<span class="cnt">0</span></a>`).join("")+`<a href="#comparatif">🧭 Comparatif</a><a href="#resultats">📊 Résultats</a>`;
+$("#tabs").innerHTML=IDS.map(id=>`<a href="#${id}" data-v="${id}" style="--c:${T[id].color}">${T[id].flag}<span class="tn"> ${esc(T[id].nom)}</span><span class="cnt" data-cnt="${id}">0</span></a>`).join("")+`<a href="#comparatif" data-v="comparatif">🧭<span class="tn"> Comparer</span></a><a href="#resultats" data-v="resultats">📊<span class="tn"> Résultats</span></a>`;
+$("#score").innerHTML=IDS.map(id=>`<a href="#${id}" style="--c:${T[id].color}">${T[id].flag} <b data-cnt="${id}">0</b></a>`).join("");
 $("#countries").innerHTML=IDS.map(renderCountry).join("");
 document.querySelectorAll(".vote").forEach(b=>b.onclick=()=>cast(b.dataset.id));
 $("#prixDate").textContent=C.prixReleves;
-$("#credits").innerHTML=(window.VOYAGE_CREDITS||[]).map(c=>`<li><a href="${c.url}" target="_blank" rel="noopener">${esc(c.title.replace("File:",""))}</a> — ${esc(c.artist)} (${esc(c.lic)})</li>`).join("");
+$("#credits").innerHTML=(window.VOYAGE_CREDITS||[]).map(c=>`<li>${esc(c.cap||"")} : <a href="${c.url}" target="_blank" rel="noopener">${esc(c.title.replace("File:",""))}</a> — ${esc(c.artist)} (${esc(c.lic)})</li>`).join("");
+// galeries
+document.querySelectorAll(".gal").forEach(g=>{const tr=g.querySelector(".track"),dots=[...g.querySelectorAll(".dots-g i")];
+const cur=()=>Math.round(tr.scrollLeft/tr.clientWidth);
+tr.addEventListener("scroll",()=>{const c=cur();dots.forEach((d,i)=>d.classList.toggle("on",i===c))},{passive:true});
+g.querySelector(".prev").onclick=()=>tr.scrollTo({left:(cur()-1)*tr.clientWidth,behavior:"smooth"});
+g.querySelector(".next").onclick=()=>tr.scrollTo({left:((cur()+1)%dots.length)*tr.clientWidth,behavior:"smooth"})});
+// accordéons : un seul ouvert à la fois par pays
+document.querySelectorAll(".acc").forEach(acc=>acc.querySelectorAll(":scope>details").forEach(d=>d.addEventListener("toggle",()=>{if(d.open){acc.querySelectorAll(":scope>details[open]").forEach(o=>{if(o!==d)o.open=false});setTimeout(()=>{const r=d.getBoundingClientRect();if(r.top<60||r.top>innerHeight*.6)scrollTo({top:scrollY+r.top-64,behavior:"smooth"})},60)}})));
+document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const d=b.closest(".country").querySelector(`details[data-k="${b.dataset.open}"]`);if(d){d.open=true}});
+// vues
+const VIEWS=[...IDS,"comparatif","resultats"];
+function show(v,push){if(!VIEWS.includes(v))v=IDS[0];document.querySelectorAll(".view").forEach(e=>e.classList.toggle("on",e.dataset.view===v));
+document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on",a.dataset.v===v));
+const at=document.querySelector(`#tabs a[data-v="${v}"]`);if(at)at.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+document.body.style.setProperty("--cur",T[v]?T[v].color:"#1d2430");
+const top=$("#tabs").offsetTop;if(push!==false&&scrollY>top)scrollTo({top,behavior:"auto"})}
+const fromHash=()=>{let h=location.hash.slice(1).replace(/^c-/,"");return h||IDS[0]};
+addEventListener("hashchange",()=>show(fromHash()));show(fromHash(),false);
+// swipe entre pays (hors galerie et tableau)
+let sx=0,sy=0,ok=false;$("#countries").addEventListener("touchstart",e=>{ok=!e.target.closest(".gal,.table-wrap");sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+$("#countries").addEventListener("touchend",e=>{if(!ok)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>80&&Math.abs(dx)>2*Math.abs(dy)){const cur=fromHash().replace(/^c-/,""),i=IDS.indexOf(cur);if(i<0)return;location.hash=IDS[(i+(dx<0?1:3))%4]}},{passive:true});
 renderCompare();renderNames();load();setInterval(load,5000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
 })();
