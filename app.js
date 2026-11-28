@@ -1,5 +1,5 @@
 (function(){
-const C=window.VOYAGE_CONFIG, T=window.VOYAGE_CONTENT, IDS=["th","vn","id","ph"];
+const C=window.VOYAGE_CONFIG, T=window.VOYAGE_CONTENT, IDS=["th","vn","id","ph","la","kh"];
 const MOIS=["J","F","M","A","M","J","J","A","S","O","N","D"];
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const eur=n=>String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ")+" €";const eur10=n=>eur(Math.round(n/10)*10);
@@ -70,7 +70,7 @@ ${c.alerte?`<p class="alerte">${esc(c.alerte)}</p>`:""}
 <p class="small muted">💶 ${esc(c.prixNotes)} ${esc(window.VOYAGE_VACANCES||"")}</p>
 <p class="src">Prix décrits par saison (pas de chiffres inventés) ; dates des fêtes lunaires « prévues » tant qu'elles ne sont pas officielles. Sources (consultées le 26/11/2026) : ${c.sources.map(lnk).join(" · ")}</p>`}
 function renderCountry(id){const t=T[id],p=t.pratique,g=t.geo,d=t.drone,k=calc(id),ix=IDS.indexOf(id);
-const prev=IDS[(ix+3)%4],next=IDS[(ix+1)%4];
+const prev=IDS[(ix+IDS.length-1)%IDS.length],next=IDS[(ix+1)%IDS.length];
 return `<article class="view country" id="v-${id}" data-view="${id}" style="--c:${t.color}">
 ${gallery(id)}
 <div class="c-body">
@@ -116,20 +116,20 @@ function renderCompare(){const rows=[
 ["Hôtel / pers. (15 n.)",id=>eur(calc(id).part)],
 ["Transports + sur place",id=>eur(C.pays[id].transportsInterieurs.prix)+" + "+eur(calc(id).budget)+"<br><span class='muted'>"+C.pays[id].budgetJour+" €/jour</span>"],
 ["En mars",id=>esc(T[id].verdictMars)],
-["Plages",id=>({jp:"⭐ (pas sur ce circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
-["Plongée",id=>({jp:"⭐ (Okinawa, hors circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐"})[id]],
-["Culture",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐"})[id]],
-["Food",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
-["Fête",id=>({jp:"⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐"})[id]],
-["Visa",id=>({jp:"Sans visa 90 j (JESTA prévue vers 2028)",th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel"})[id]],
-["Décalage",id=>({jp:"+8 h",th:"+6 h",vn:"+6 h",id:"+6 à +7 h",ph:"+7 h"})[id]],
+["Plages",id=>({jp:"⭐ (pas sur ce circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐",la:"⭐ (pas de mer !)",kh:"⭐⭐⭐"})[id]],
+["Plongée",id=>({jp:"⭐ (Okinawa, hors circuit)",th:"⭐⭐⭐⭐",vn:"⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐⭐⭐",la:"⭐ (eau douce)",kh:"⭐⭐⭐"})[id]],
+["Culture",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐",la:"⭐⭐⭐⭐",kh:"⭐⭐⭐⭐⭐"})[id]],
+["Food",id=>({jp:"⭐⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐⭐⭐",id:"⭐⭐⭐",ph:"⭐⭐⭐",la:"⭐⭐⭐",kh:"⭐⭐⭐⭐"})[id]],
+["Fête",id=>({jp:"⭐⭐⭐⭐",th:"⭐⭐⭐⭐⭐",vn:"⭐⭐⭐",id:"⭐⭐⭐⭐",ph:"⭐⭐⭐",la:"⭐⭐",kh:"⭐⭐⭐"})[id]],
+["Visa",id=>({jp:"Sans visa 90 j (JESTA prévue vers 2028)",th:"Sans visa 30 j + TDAC",vn:"Sans visa 45 j",id:"e-VOA ~24 € + taxe Bali",ph:"Sans visa 30 j + eTravel",la:"eVisa 50 $ ou à l'arrivée 40 $",kh:"eVisa 30 $ + e-Arrival"})[id]],
+["Décalage",id=>({jp:"+8 h",th:"+6 h",vn:"+6 h",id:"+6 à +7 h",ph:"+7 h",la:"+6 h",kh:"+6 h"})[id]],
 ["Sécurité",id=>(T[id].geo.note<=1?"🟩 ":"🟨 ")+T[id].geo.note+"/5"],
 ["Se déplacer",id=>T[id].move.statut+" "+esc(T[id].move.resume)],
 ["Vapote",id=>T[id].vape.statut+" "+esc(T[id].vape.resume)],
 ["Drone < 250 g",id=>T[id].drone.statut+" "+esc(T[id].drone.resume)]];
 const CI=T.jp&&C.pays.jp?[...IDS,"jp"]:IDS,cl=id=>id==="jp"?' class="ref"':"";
 $("#compare").innerHTML=`<thead><tr><th></th>${CI.map(id=>`<th${cl(id)}>${T[id].flag} ${esc(T[id].nom)}${id==="jp"?"<br><span class='muted'>pour comparaison</span>":""}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr><th>${r[0]}</th>${CI.map(id=>`<td${cl(id)}>${r[1](id)}</td>`).join("")}</tr>`).join("")}</tbody>`;
-if(CI.includes("jp")){const t=T.jp,ts=CI.filter(i=>i!=="jp").map(i=>T[i].flag+" ~"+eur10(calc(i).total)).join(" · ");$("#japon").innerHTML=`<h3>🇯🇵 Et le Japon ? (pour comparaison, hors vote)</h3><p>Circuit classique Tokyo (6 n.) → Kyoto (5 n.) → Osaka (4 n.), mêmes hypothèses que les 4 autres : <b>~${eur10(calc("jp").total)} / pers.</b>, contre ${ts}. En mars, on est juste avant le pic des sakura (fin mars – début avril), où les prix d'hôtel peuvent grimper de 50 à 100 %. Meilleures fenêtres : mi-novembre (érables, prix plus doux) ou le pic des sakura si le budget suit.</p>${priceBlock("jp")}${hotelTable("jp")}${T.jp.cal?`<h4>📅 Prix, météo, fêtes (pour comparaison)</h4>${calBlock("jp")}`:""}<ul style="list-style:none;padding:0"><li>🌸 <b>Mars :</b> ${esc(t.verdictMars)}</li><li>🛡️ <b>Sécurité ${t.geo.note}/5 :</b> ${esc(t.geo.resume)}</li><li>🚄 <b>Se déplacer ${t.move.statut} :</b> ${esc(t.move.resume)}</li><li>💨 <b>Vapote ${t.vape.statut} :</b> ${esc(t.vape.resume)}</li><li>🛸 <b>Drone < 250 g ${t.drone.statut} :</b> ${esc(t.drone.resume)}</li><li>🛂 <b>Entrée :</b> passeport valide pour toute la durée du séjour, 90 jours sans visa ; JESTA (autorisation électronique payante) prévue vers 2028, pas encore en service.</li><li>🕗 <b>Décalage :</b> +8 h en mars.</li></ul><p class="src">Sources : ${t.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`}}
+if(CI.includes("jp")){const t=T.jp,ts=CI.filter(i=>i!=="jp").map(i=>T[i].flag+" ~"+eur10(calc(i).total)).join(" · ");$("#japon").innerHTML=`<h3>🇯🇵 Et le Japon ? (pour comparaison, hors vote)</h3><p>Circuit classique Tokyo (6 n.) → Kyoto (5 n.) → Osaka (4 n.), mêmes hypothèses que les 6 autres : <b>~${eur10(calc("jp").total)} / pers.</b>, contre ${ts}. En mars, on est juste avant le pic des sakura (fin mars – début avril), où les prix d'hôtel peuvent grimper de 50 à 100 %. Meilleures fenêtres : mi-novembre (érables, prix plus doux) ou le pic des sakura si le budget suit.</p>${priceBlock("jp")}${hotelTable("jp")}${T.jp.cal?`<h4>📅 Prix, météo, fêtes (pour comparaison)</h4>${calBlock("jp")}`:""}<ul style="list-style:none;padding:0"><li>🌸 <b>Mars :</b> ${esc(t.verdictMars)}</li><li>🛡️ <b>Sécurité ${t.geo.note}/5 :</b> ${esc(t.geo.resume)}</li><li>🚄 <b>Se déplacer ${t.move.statut} :</b> ${esc(t.move.resume)}</li><li>💨 <b>Vapote ${t.vape.statut} :</b> ${esc(t.vape.resume)}</li><li>🛸 <b>Drone < 250 g ${t.drone.statut} :</b> ${esc(t.drone.resume)}</li><li>🛂 <b>Entrée :</b> passeport valide pour toute la durée du séjour, 90 jours sans visa ; JESTA (autorisation électronique payante) prévue vers 2028, pas encore en service.</li><li>🕗 <b>Décalage :</b> +8 h en mars.</li></ul><p class="src">Sources : ${t.sources.map(s=>`<a href="${s[1]}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(" · ")}</p>`}}
 
 function renderNames(){$("#names").innerHTML=C.prenoms.map(n=>`<button class="chip${n===myName?" on":""}" data-n="${esc(n)}">${esc(n)}</button>`).join("");
 document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{myName=b.dataset.n===myName?"":b.dataset.n;localStorage.setItem("vv_name",myName);renderNames();if(myVote)cast(myVote,true)})}
@@ -176,7 +176,7 @@ const fromHash=()=>{let h=location.hash.slice(1).replace(/^c-/,"");return h||IDS
 addEventListener("hashchange",()=>show(fromHash()));show(fromHash(),false);
 // swipe entre pays (hors galerie et tableau)
 let sx=0,sy=0,ok=false;$("#countries").addEventListener("touchstart",e=>{ok=!e.target.closest(".gal,.table-wrap");sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
-$("#countries").addEventListener("touchend",e=>{if(!ok)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>80&&Math.abs(dx)>2*Math.abs(dy)){const cur=fromHash().replace(/^c-/,""),i=IDS.indexOf(cur);if(i<0)return;location.hash=IDS[(i+(dx<0?1:3))%4]}},{passive:true});
+$("#countries").addEventListener("touchend",e=>{if(!ok)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;if(Math.abs(dx)>80&&Math.abs(dx)>2*Math.abs(dy)){const cur=fromHash().replace(/^c-/,""),i=IDS.indexOf(cur);if(i<0)return;location.hash=IDS[(i+(dx<0?1:IDS.length-1))%IDS.length]}},{passive:true});
 renderCompare();renderNames();load();setInterval(load,5000);
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
 })();

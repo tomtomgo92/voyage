@@ -71,6 +71,35 @@ window.VOYAGE_CONFIG = {
       budgetJour: 55,
       formalites: { prix: 0, detail: "aucune (30 jours sans visa)" }
     },
+
+    la: {
+      vols: {
+        airFrance: { prix: 1133, detail: "Air France / Thai Airways via Bangkok, puis vol régional Bangkok → Vientiane (dès 1 133 € relevés)" },
+        moinsCher: { compagnie: "China Southern", prix: 756, detail: "1 escale à Canton (relevé Kayak, fenêtre février-mars) ; Vietnam Airlines via Hanoï dès ~770 €" }
+      },
+      hotels: [
+        { zone: "Vientiane", nuits: 4, hotel: "ibis Vientiane Nam Phu (Accor)", nuit: 50 },
+        { zone: "Vang Vieng", nuits: 4, hotel: "Amari Vang Vieng (4★ au bord de la Nam Song)", nuit: 80 },
+        { zone: "Luang Prabang", nuits: 7, hotel: "3 Nagas Hotel, MGallery (Accor), vieille ville", nuit: 90 }
+      ],
+      transportsInterieurs: { prix: 60, detail: "train LCR Vientiane → Vang Vieng (~10 €) et Vang Vieng → Luang Prabang (~12 €) en 2e classe, navettes de gare, tuk-tuks et excursion aux chutes de Kuang Si" },
+      budgetJour: 35,
+      formalites: { prix: 43, detail: "eVisa 50 $ (~43 €) ou visa à l'arrivée 40 $ en espèces ; formulaire LDIF gratuit" }
+    },
+    kh: {
+      vols: {
+        airFrance: { prix: null, detail: "Air France / KLM via Bangkok puis vol régional ; aucun tarif fiable relevé pour les fenêtres 2027" },
+        moinsCher: { compagnie: "Etihad", prix: 586, detail: "1 escale à Abu Dhabi (dès 586 € relevés hors pointe ; en février, compter plutôt 700-950 €)" }
+      },
+      hotels: [
+        { zone: "Phnom Penh", nuits: 4, hotel: "Novotel Phnom Penh BKK 1 (Accor)", nuit: 80 },
+        { zone: "Siem Reap", nuits: 7, hotel: "hôtel 4★ près de la rivière et de Pub Street (Sofitel Angkor et Raffles Grand Hôtel pour la version rêve)", nuit: 55 },
+        { zone: "Kampot / Kep", nuits: 4, hotel: "hôtel 4★ au bord de la rivière à Kampot", nuit: 55 }
+      ],
+      transportsInterieurs: { prix: 85, detail: "bus Phnom Penh → Siem Reap (~16 €), long bus Siem Reap → Kampot via Phnom Penh (~20 €), tuk-tuks et PassApp sur place" },
+      budgetJour: 40,
+      formalites: { prix: 26, detail: "eVisa touristique 30 $ (~26 €) ou visa à l'arrivée 30 $ ; formulaire e-Arrival gratuit" }
+    },
     // Japon : colonne de référence « pour comparaison » (hors vote)
     jp: {
       vols: {
